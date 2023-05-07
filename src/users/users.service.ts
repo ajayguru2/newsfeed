@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Role } from 'src/roles/roles.enum';
 import { User, UserDocument } from './user.schema';
 
 @Injectable()
@@ -15,10 +14,13 @@ export class UsersService {
     return createdUser.save();
   }
 
-  createAdmin(userDto: User) {
-    const user = new this.userModel(userDto);
-    user.roles = [Role.Admin];
-    return user.save();
+  createAdmin(userDto: User): Promise<User> {
+    // check if user exists
+    return this.userModel.findOneAndUpdate(
+      { email: userDto.email },
+      { roles: ['admin', 'user'] },
+      { new: true },
+    );
   }
 
   async findAll(): Promise<User[]> {

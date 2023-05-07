@@ -1,4 +1,6 @@
 import { Body, Controller, Get, Headers, Logger, Post } from '@nestjs/common';
+import { Role } from 'src/roles/roles.enum';
+import { Roles } from 'src/roles/roles.metadata';
 import {
   UserLoginDto,
   UserLoginResponse,
@@ -24,12 +26,14 @@ export class AuthController {
     return await this.authService.register(userDto);
   }
 
+  @Roles(Role.Admin)
   @Post('register-admin')
   async registerAdmin(
     @Headers() headers: Record<string, string>,
     @Body() userDto: UserRegisterDto,
   ): Promise<UserRegisterResponse> {
     const token = headers.authorization.split(' ')[1];
+    console.log(token);
     return await this.authService.registerAdmin(userDto, token);
   }
 
