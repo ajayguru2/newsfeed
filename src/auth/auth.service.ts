@@ -24,6 +24,26 @@ export class AuthService {
     };
   }
 
+  async registerAdmin(
+    userDto: UserRegisterDto,
+    token: string,
+  ): Promise<UserRegisterResponse> {
+    const payload = await this.jwtService.verifyAsync(token);
+    if (payload) {
+      const user = await this.userService.createAdmin(userDto);
+      return {
+        httpsCode: 201,
+        message: 'Admin created successfully',
+        user,
+      };
+    } else {
+      return {
+        httpsCode: 401,
+        message: 'Unauthorized',
+      };
+    }
+  }
+
   async login(userDto: UserLoginDto): Promise<UserLoginResponse> {
     const user = await this.userService.findByEmail(userDto.email);
     if (user) {

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Logger, Post } from '@nestjs/common';
 import {
   UserLoginDto,
   UserLoginResponse,
@@ -16,11 +16,21 @@ export class AuthController {
     this.logger.log('AuthController created');
   }
 
+  @Public()
   @Post('register')
   async register(
     @Body() userDto: UserRegisterDto,
   ): Promise<UserRegisterResponse> {
     return await this.authService.register(userDto);
+  }
+
+  @Post('register-admin')
+  async registerAdmin(
+    @Headers() headers: Record<string, string>,
+    @Body() userDto: UserRegisterDto,
+  ): Promise<UserRegisterResponse> {
+    const token = headers.authorization.split(' ')[1];
+    return await this.authService.registerAdmin(userDto, token);
   }
 
   @Public()

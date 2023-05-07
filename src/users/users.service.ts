@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Role } from 'src/roles/roles.enum';
 import { User, UserDocument } from './user.schema';
 
 @Injectable()
@@ -12,6 +13,12 @@ export class UsersService {
   async create(createUserDto: User): Promise<User> {
     const createdUser = new this.userModel(createUserDto);
     return createdUser.save();
+  }
+
+  createAdmin(userDto: User) {
+    const user = new this.userModel(userDto);
+    user.roles = [Role.Admin];
+    return user.save();
   }
 
   async findAll(): Promise<User[]> {
