@@ -15,7 +15,7 @@ import { Article } from './article.schema';
 import { ArticleService } from './article.service';
 import { ArticleCreateRequest, ArticleUpdateRequest } from './article.types';
 
-@Controller('article')
+@Controller('articles')
 export class ArticleController {
   private readonly logger = new Logger(ArticleController.name);
   constructor(private readonly articleService: ArticleService) {
@@ -24,7 +24,7 @@ export class ArticleController {
 
   // @Roles(Role.Admin, Role.User)
   @Public()
-  @Get('all')
+  @Get('')
   async getAllArticles(): Promise<Article[]> {
     return await this.articleService.getAllArticles();
   }
