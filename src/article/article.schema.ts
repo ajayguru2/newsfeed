@@ -8,15 +8,34 @@ export class Article {
   uuid: string;
   @Prop({ required: true, unique: true })
   title: string;
+  @Prop({ required: true })
   description: string;
+  @Prop({ type: Object })
   body: any;
+  @Prop()
   imageUrl?: string;
+  @Prop()
   createdAt: Date;
+  @Prop()
   updatedAt?: Date;
+  @Prop({
+    type: {
+      name: String,
+      email: String,
+    },
+    required: true,
+  })
   createdBy: {
     name: string;
     email: string;
   };
+  @Prop({
+    type: {
+      name: String,
+      email: String,
+    },
+    required: false,
+  })
   updatedBy?: {
     name: string;
     email: string;
