@@ -4,9 +4,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
 import { RolesModule } from './roles/roles.module';
-import { FeedModule } from './feed/feed.module';
+import { UsersModule } from './users/users.module';
 import { ArticleModule } from './article/article.module';
 
 @Module({
@@ -26,7 +25,6 @@ import { ArticleModule } from './article/article.module';
     AuthModule,
     UsersModule,
     RolesModule,
-    FeedModule,
     ArticleModule,
   ],
   controllers: [AppController],
