@@ -6,7 +6,9 @@ import {
   Headers,
   Logger,
   Post,
+  Query,
 } from '@nestjs/common';
+import { Public } from 'src/auth/auth.metadata';
 import { Role } from 'src/roles/roles.enum';
 import { Roles } from 'src/roles/roles.metadata';
 import { Article } from './article.schema';
@@ -20,19 +22,29 @@ export class ArticleController {
     this.logger.log('ArticleController');
   }
 
-  @Roles(Role.Admin, Role.User)
-  @Get()
+  // @Roles(Role.Admin, Role.User)
+  @Public()
+  @Get('all')
   async getAllArticles(): Promise<Article[]> {
     return await this.articleService.getAllArticles();
   }
 
-  @Roles(Role.Admin)
+  @Public()
+  @Get()
+  async getArticleById(@Query('id') id: string) {
+    this.logger.log('getArticleById: ' + id);
+    return await this.articleService.getArticleById(id);
+  }
+
+  // @Roles(Role.Admin)
   @Post()
   async createArticle(
     @Body() articleCreateRequest: ArticleCreateRequest,
     @Headers() headers: Record<string, string>,
   ): Promise<Article> {
+    this.logger.log('createArticle');
     const token = headers.authorization.split(' ')[1];
+    this.logger.log('token: ' + token);
     return await this.articleService.createArticle(articleCreateRequest, token);
   }
 

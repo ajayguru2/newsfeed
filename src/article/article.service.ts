@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { UsersService } from '../users/users.service';
-import { ArticleDocument } from './article.schema';
+import { Article, ArticleDocument } from './article.schema';
 import { ArticleCreateRequest, ArticleUpdateRequest } from './article.types';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class ArticleService {
     this.logger.log('ArticleService');
   }
 
-  async getAllArticles(): Promise<ArticleDocument[]> {
+  async getAllArticles(): Promise<Article[]> {
     // return all articles
     return this.articleModel.find().exec();
   }
@@ -27,8 +27,9 @@ export class ArticleService {
     userToken: string,
   ): Promise<ArticleDocument> {
     // create article
+    this.logger.log('article: ' + JSON.stringify(article));
     const newArticle = {
-      id: uuidv4(),
+      uuid: uuidv4(),
       title: article.title,
       description: article.description,
       body: article.body,
@@ -40,8 +41,11 @@ export class ArticleService {
       },
     };
 
+    this.logger.log('newArticle: ' + JSON.stringify(newArticle));
+
     // get user from token
     const user = await this.usersService.getUserFromToken(userToken);
+    this.logger.log('user: ' + JSON.stringify(user));
     if (user) {
       newArticle.createdBy = {
         name: user.name,
@@ -50,7 +54,7 @@ export class ArticleService {
     }
 
     // save article
-
+    this.logger.log('newArticle: ' + JSON.stringify(newArticle));
     const createdArticle = new this.articleModel(newArticle);
     return createdArticle.save();
   }
@@ -113,5 +117,10 @@ export class ArticleService {
       message: 'All articles deleted successfully',
       code: 200,
     };
+  }
+
+  getArticleById(id: string) {
+    this.logger.log('id: ' + id);
+    return this.articleModel.findOne({ uuid: id });
   }
 }
