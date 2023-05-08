@@ -90,14 +90,12 @@ export class ArticleService {
     return articleToUpdate.save();
   }
 
-  async deleteArticle(article: ArticleUpdateRequest) {
+  async deleteArticle(articleId: string) {
     // find article by title
-    const articleToDelete = await this.articleModel.findOne({
-      uuid: article.uuid,
-    });
+    const articleToDelete = await this.articleModel.findById(articleId);
     // delete article
     if (articleToDelete) {
-      this.articleModel.deleteOne({ uuid: article.uuid }).exec();
+      this.articleModel.deleteOne({ _id: articleId }).exec();
       return {
         message: 'Article deleted successfully',
         code: 200,

@@ -40,7 +40,7 @@ export class ArticleController {
     return await this.articleService.getArticleById(req.id);
   }
 
-  // @Roles(Role.Admin)
+  @Roles(Role.Admin)
   @Post()
   async createArticle(
     @Body() articleCreateRequest: ArticleCreateRequest,
@@ -52,7 +52,7 @@ export class ArticleController {
     return await this.articleService.createArticle(articleCreateRequest, token);
   }
 
-  // @Roles(Role.Admin)
+  @Roles(Role.Admin)
   @Put(':id')
   async updateArticle(
     @Body() articleUpdateRequest: ArticleUpdateRequest,
@@ -62,13 +62,14 @@ export class ArticleController {
     return await this.articleService.updateArticle(articleUpdateRequest, token);
   }
 
-  // @Roles(Role.Admin)
+  @Roles(Role.Admin)
   @Delete(':id')
-  async deleteArticle(@Body() articleUpdateRequest: ArticleUpdateRequest) {
-    return await this.articleService.deleteArticle(articleUpdateRequest);
+  async deleteArticle(@Param() req: { id: string }) {
+    this.logger.log('deleteArticle: ' + req.id);
+    return await this.articleService.deleteArticle(req.id);
   }
 
-  // @Roles(Role.Admin)
+  @Roles(Role.Admin)
   @Delete()
   async deleteAllArticles() {
     return await this.articleService.deleteAllArticles();
