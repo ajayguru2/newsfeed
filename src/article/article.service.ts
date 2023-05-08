@@ -121,6 +121,6 @@ export class ArticleService {
 
   getArticleById(id: string) {
     this.logger.log('id: ' + id);
-    return this.articleModel.findOne({ uuid: id });
+    return this.articleModel.findById(id).exec();
   }
 }

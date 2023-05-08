@@ -2,7 +2,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Role } from 'src/roles/roles.enum';
 import { User, UserDocument } from './user.schema';
+import { UserRegisterDto } from './user.types';
 
 @Injectable()
 export class UsersService {
@@ -12,16 +14,16 @@ export class UsersService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async create(createUserDto: User): Promise<User> {
+  async create(createUserDto: UserRegisterDto): Promise<User> {
     const createdUser = new this.userModel(createUserDto);
     return createdUser.save();
   }
 
-  createAdmin(userDto: User): Promise<User> {
+  createAdmin(userDto: UserRegisterDto): Promise<User> {
     // check if user exists
     return this.userModel.findOneAndUpdate(
       { email: userDto.email },
-      { roles: ['admin', 'user'] },
+      { roles: Role.Admin },
       { new: true },
     );
   }

@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
+import { UsersModule } from 'src/users/users.module';
 import { RolesGuard } from './roles.guard';
 
 @Module({
-  imports: [],
+  imports: [UsersModule],
   controllers: [],
   providers: [
     {

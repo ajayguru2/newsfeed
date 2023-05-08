@@ -68,4 +68,17 @@ export class AuthService {
       };
     }
   }
+
+  async me(token: string) {
+    const payload = await this.jwtService.verifyAsync(token);
+    if (payload) {
+      const user = await this.userService.findOne(payload.id);
+      return user;
+    } else {
+      return {
+        httpsCode: 401,
+        message: 'Unauthorized',
+      };
+    }
+  }
 }

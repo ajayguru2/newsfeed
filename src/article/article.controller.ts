@@ -5,8 +5,9 @@ import {
   Get,
   Headers,
   Logger,
+  Param,
   Post,
-  Query,
+  Put,
 } from '@nestjs/common';
 import { Public } from 'src/auth/auth.metadata';
 import { Role } from 'src/roles/roles.enum';
@@ -22,18 +23,21 @@ export class ArticleController {
     this.logger.log('ArticleController');
   }
 
-  // @Roles(Role.Admin, Role.User)
-  @Public()
+  @Roles(Role.Admin, Role.User)
+  // @Public()
   @Get('')
   async getAllArticles(): Promise<Article[]> {
-    return await this.articleService.getAllArticles();
+    this.logger.log('getAllArticles');
+    const articles = await this.articleService.getAllArticles();
+    this.logger.log('articles: ' + articles);
+    return articles;
   }
 
   @Public()
-  @Get()
-  async getArticleById(@Query('id') id: string) {
-    this.logger.log('getArticleById: ' + id);
-    return await this.articleService.getArticleById(id);
+  @Get(':id')
+  async getArticleById(@Param() req: { id: string }) {
+    this.logger.log('getArticleById: ' + req.id);
+    return await this.articleService.getArticleById(req.id);
   }
 
   // @Roles(Role.Admin)
@@ -48,8 +52,8 @@ export class ArticleController {
     return await this.articleService.createArticle(articleCreateRequest, token);
   }
 
-  @Roles(Role.Admin)
-  @Post(':id')
+  // @Roles(Role.Admin)
+  @Put(':id')
   async updateArticle(
     @Body() articleUpdateRequest: ArticleUpdateRequest,
     @Headers() headers: Record<string, string>,
@@ -58,13 +62,13 @@ export class ArticleController {
     return await this.articleService.updateArticle(articleUpdateRequest, token);
   }
 
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
   @Delete(':id')
   async deleteArticle(@Body() articleUpdateRequest: ArticleUpdateRequest) {
     return await this.articleService.deleteArticle(articleUpdateRequest);
   }
 
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
   @Delete()
   async deleteAllArticles() {
     return await this.articleService.deleteAllArticles();
