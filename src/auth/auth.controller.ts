@@ -33,7 +33,9 @@ export class AuthController {
     @Body() userDto: UserRegisterDto,
   ): Promise<UserRegisterResponse> {
     const token = headers.authorization.split(' ')[1];
-    console.log(token);
+    this.logger.log(
+      `Admin is trying to register a new user with token ${token}`,
+    );
     return await this.authService.registerAdmin(userDto, token);
   }
 
